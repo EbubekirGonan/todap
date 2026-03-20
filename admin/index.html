@@ -1,12 +1,1012 @@
-<!doctype html>
-<html>
+
+<!DOCTYPE html>
+<html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TODAP Yönetici Paneli</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TODAP — Yönetici Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0c;
+  --surface:#1a1614;
+  --surface2:#231f1d;
+  --surface3:#2d2825;
+  --border:#3a3330;
+  --border2:#4a4340;
+  --burgundy:#7a1f2e;
+  --burgundy-bright:#a02840;
+  --mustard:#c9872b;
+  --mustard-dim:#8a5c1a;
+  --cream:#faf7f2;
+  --text:#e8e0d8;
+  --text-muted:#9a8f86;
+  --text-faint:#5a504a;
+  --success:#3a6b35;
+  --success-bg:#1a2e18;
+  --error:#8b2020;
+  --error-bg:#2e1515;
+  --fd:'Syne',system-ui,sans-serif;
+  --fs:'Lora',Georgia,serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fd);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--bg)}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3rem;width:100%;max-width:400px}
+.login-logo{font-family:var(--fd);font-size:28px;font-weight:800;color:var(--cream);margin-bottom:4px}
+.login-logo span{color:var(--mustard)}
+.login-sub{font-size:12px;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:2.5rem}
+.login-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px}
+.login-input{width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--cream);font-family:var(--fd);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.login-input:focus{border-color:var(--mustard)}
+.login-btn{width:100%;padding:12px;background:var(--burgundy);color:var(--cream);font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;border-radius:6px;cursor:pointer;transition:background .2s}
+.login-btn:hover{background:var(--burgundy-bright)}
+.login-error{background:var(--error-bg);border:1px solid var(--error);border-radius:6px;padding:10px 14px;font-size:13px;color:#e57373;margin-top:1rem;display:none}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+.sidebar-logo{padding:1.5rem 1.75rem;border-bottom:1px solid var(--border)}
+.sidebar-logo-text{font-size:20px;font-weight:800;color:var(--cream)}
+.sidebar-logo-text span{color:var(--mustard)}
+.sidebar-logo-sub{font-size:10px;color:var(--text-faint);letter-spacing:0.07em;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{padding:1rem 0;flex:1;overflow-y:auto}
+.nav-section{padding:0.5rem 1.75rem 0.25rem;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.75rem;cursor:pointer;transition:all .15s;color:var(--text-muted);font-size:13px;font-weight:600;letter-spacing:0.02em;border-left:2px solid transparent;text-decoration:none}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--mustard);background:var(--surface2);border-left-color:var(--mustard)}
+.nav-item .icon{width:16px;height:16px;opacity:0.7;flex-shrink:0}
+.nav-item.active .icon{opacity:1}
+.sidebar-footer{padding:1.25rem 1.75rem;border-top:1px solid var(--border)}
+.sidebar-footer a{font-size:12px;color:var(--text-faint);text-decoration:none;display:block;margin-bottom:6px;transition:color .2s}
+.sidebar-footer a:hover{color:var(--text)}
+.sidebar-user{font-size:11px;color:var(--text-faint);margin-top:0.75rem}
+
+.main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:5}
+.topbar-title{font-size:16px;font-weight:700;color:var(--cream)}
+.topbar-actions{display:flex;gap:10px;align-items:center}
+.content{padding:2rem;flex:1}
+
+/* BUTTONS */
+.btn{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:8px 18px;border-radius:5px;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--burgundy);color:var(--cream)}
+.btn-primary:hover{background:var(--burgundy-bright)}
+.btn-secondary{background:var(--surface3);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface2);border-color:var(--border2)}
+.btn-success{background:var(--success);color:var(--cream)}
+.btn-success:hover{background:#4a8a40}
+.btn-danger{background:var(--error);color:var(--cream)}
+.btn-danger:hover{background:#a02020}
+.btn-mustard{background:var(--mustard);color:#fff}
+.btn-mustard:hover{background:#b07020}
+.btn-sm{padding:5px 12px;font-size:11px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem}
+.stat-card-num{font-size:36px;font-weight:800;color:var(--mustard);line-height:1}
+.stat-card-label{font-size:11px;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-top:6px}
+.stat-card-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+
+.recent-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.widget{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem}
+.widget-title{font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+.widget-item{padding:0.75rem 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.widget-item:last-child{border-bottom:none;padding-bottom:0}
+.widget-item-title{font-size:13px;color:var(--text);font-weight:600;line-height:1.35;flex:1}
+.widget-item-meta{font-size:11px;color:var(--text-faint);margin-top:2px}
+.widget-item-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* TAGS */
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+.tag-red{background:rgba(122,31,46,0.3);color:#e57373;border:1px solid rgba(122,31,46,0.4)}
+.tag-mustard{background:rgba(201,135,43,0.2);color:var(--mustard);border:1px solid rgba(201,135,43,0.3)}
+.tag-green{background:rgba(58,107,53,0.3);color:#81c784;border:1px solid rgba(58,107,53,0.4)}
+.tag-gray{background:var(--surface3);color:var(--text-muted);border:1px solid var(--border)}
+
+/* LIST VIEW */
+.list-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
+.search-input{padding:8px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--fd);font-size:13px;outline:none;transition:border-color .2s;width:260px}
+.search-input:focus{border-color:var(--mustard)}
+.list-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;width:100%}
+.list-table table{width:100%;border-collapse:collapse}
+.list-table th{padding:0.75rem 1.25rem;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
+.list-table td{padding:1rem 1.25rem;border-bottom:1px solid var(--border);color:var(--text);font-size:13px;vertical-align:top}
+.list-table tr:last-child td{border-bottom:none}
+.list-table tr:hover td{background:var(--surface2)}
+.list-table .td-title{font-weight:600;color:var(--cream);max-width:320px;line-height:1.4}
+.list-table .td-date{color:var(--text-faint);white-space:nowrap;font-size:12px}
+.list-table .td-actions{white-space:nowrap}
+.list-table .td-actions{display:flex;gap:6px}
+
+/* FORM */
+.form-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:2rem;max-width:900px}
+.form-section-title{font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.form-row.single{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)}
+.form-input,.form-select,.form-textarea{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--cream);font-family:var(--fd);font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--mustard)}
+.form-textarea{min-height:160px;resize:vertical;font-family:var(--fs);font-size:14px;line-height:1.7}
+.form-textarea.tall{min-height:320px}
+.form-select option{background:var(--surface2)}
+.form-hint{font-size:11px;color:var(--text-faint);margin-top:2px}
+.form-actions{display:flex;gap:10px;align-items:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;padding:14px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:1000;transform:translateY(100px);opacity:0;transition:all .3s;max-width:340px;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-success{background:var(--success-bg);border:1px solid var(--success);color:#a5d6a7}
+.toast-error{background:var(--error-bg);border:1px solid var(--error);color:#ef9a9a}
+.toast-info{background:var(--surface2);border:1px solid var(--border2);color:var(--text)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;max-width:480px;width:100%}
+.modal-title{font-size:16px;font-weight:700;color:var(--cream);margin-bottom:0.5rem}
+.modal-body{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:1.5rem}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:rgba(15,13,12,0.85);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.loading-overlay.show{opacity:1;pointer-events:all}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--mustard);border-radius:50%;animation:spin 0.8s linear infinite}
+.loading-text{font-size:13px;color:var(--text-muted)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-faint)}
+.empty-state-icon{font-size:48px;margin-bottom:1rem;opacity:0.4}
+.empty-state-text{font-size:14px;margin-bottom:1.5rem}
+
+/* RICHTEXT toolbar */
+.editor-toolbar{display:flex;gap:4px;padding:8px;background:var(--surface3);border:1px solid var(--border);border-bottom:none;border-radius:6px 6px 0 0;flex-wrap:wrap}
+.editor-toolbar button{padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:3px;color:var(--text-muted);font-size:12px;font-family:var(--fd);cursor:pointer;transition:all .15s}
+.editor-toolbar button:hover{background:var(--surface);color:var(--cream)}
+.editor-toolbar button.active{background:var(--mustard-dim);color:var(--mustard);border-color:var(--mustard-dim)}
+.editor-textarea{border-radius:0 0 6px 6px !important;border-top:none !important}
+
+/* TICKER EDITOR */
+.ticker-item{display:flex;gap:8px;align-items:center;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;margin-bottom:6px}
+.ticker-item input{flex:1;padding:6px 10px;background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--cream);font-family:var(--fd);font-size:13px;outline:none}
+.ticker-item input:focus{border-color:var(--mustard)}
+
+/* STATUS */
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px}
+.status-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.status-live{color:#81c784;background:rgba(58,107,53,0.2)}
+.status-draft{color:var(--text-muted);background:var(--surface3)}
+
+/* DEPLOY STATUS */
+.deploy-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.deploy-info{display:flex;align-items:center;gap:10px}
+.deploy-dot{width:8px;height:8px;border-radius:50%;background:#81c784;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.deploy-text{font-size:12px;color:var(--text-muted)}
+.deploy-text strong{color:var(--cream)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{width:200px}
+  .main{margin-left:200px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .recent-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">TOD<span>AP</span></div>
+    <div class="login-sub">Yönetici Paneli</div>
+    <label class="login-label">Şifre</label>
+    <input class="login-input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-error" id="login-error">Hatalı şifre. Tekrar deneyin.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-text">TOD<span>AP</span></div>
+      <div class="sidebar-logo-sub">Yönetici Paneli</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Genel</div>
+      <a class="nav-item active" onclick="showPage('dashboard')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="nav-section" style="margin-top:0.5rem">İçerik</div>
+      <a class="nav-item" onclick="showPage('haberler')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Haberler
+      </a>
+      <a class="nav-item" onclick="showPage('etkinlikler')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Etkinlikler
+      </a>
+      <a class="nav-item" onclick="showPage('ticker')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        Duyuru Bandı
+      </a>
+      <div class="nav-section" style="margin-top:0.5rem">Site</div>
+      <a class="nav-item" href="/" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Siteyi Görüntüle
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a onclick="logout()" style="cursor:pointer">Çıkış Yap</a>
+      <div class="sidebar-user">todap.netlify.app</div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-actions" id="topbar-actions"></div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="deploy-bar">
+          <div class="deploy-info">
+            <div class="deploy-dot"></div>
+            <div class="deploy-text"><strong>Site Canlı</strong> · todap.netlify.app · Değişiklikler otomatik deploy olur</div>
+          </div>
+          <a href="https://todap.netlify.app" target="_blank" class="btn btn-secondary btn-sm">Siteyi Aç ↗</a>
+        </div>
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card"><div class="stat-card-num" id="s-haber">—</div><div class="stat-card-label">Haber</div><div class="stat-card-sub">Toplam içerik</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-etkinlik">—</div><div class="stat-card-label">Etkinlik</div><div class="stat-card-sub">Toplam kayıt</div></div>
+          <div class="stat-card"><div class="stat-card-num">2</div><div class="stat-card-label">Yayın</div><div class="stat-card-sub">Süreli yayın</div></div>
+          <div class="stat-card"><div class="stat-card-num">4</div><div class="stat-card-label">Komisyon</div><div class="stat-card-sub">Aktif birim</div></div>
+        </div>
+        <div class="recent-grid">
+          <div class="widget">
+            <div class="widget-title">Son Haberler <a onclick="showPage('haberler')" style="cursor:pointer;font-size:11px;color:var(--mustard);font-weight:600;letter-spacing:0;text-transform:none">Tümü →</a></div>
+            <div id="widget-haberler"><div style="color:var(--text-faint);font-size:13px;padding:1rem 0">Yükleniyor...</div></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title">Son Etkinlikler <a onclick="showPage('etkinlikler')" style="cursor:pointer;font-size:11px;color:var(--mustard);font-weight:600;letter-spacing:0;text-transform:none">Tümü →</a></div>
+            <div id="widget-etkinlikler"><div style="color:var(--text-faint);font-size:13px;padding:1rem 0">Yükleniyor...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HABERLER LİSTESİ -->
+      <div class="page" id="page-haberler">
+        <div class="list-toolbar">
+          <input class="search-input" placeholder="Haber ara..." oninput="filterTable('haber-table',this.value)"/>
+          <button class="btn btn-primary" onclick="showPage('haber-yeni')">+ Yeni Haber</button>
+        </div>
+        <div class="list-table">
+          <table id="haber-table">
+            <thead><tr><th>Başlık</th><th>Kategori</th><th>Tarih</th><th>İşlemler</th></tr></thead>
+            <tbody id="haber-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HABER FORM -->
+      <div class="page" id="page-haber-yeni">
+        <div class="form-section">
+          <div class="form-section-title" id="haber-form-title">Yeni Haber Ekle</div>
+          <input type="hidden" id="haber-edit-slug"/>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Slug (URL kısmı)</label>
+              <input class="form-input" id="haber-slug" placeholder="ornek-haber-basligi" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/>
+              <div class="form-hint">Küçük harf, tire ile. Örn: yargi-paketi-aciklamasi</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select class="form-select" id="haber-tag">
+                <option value="Bildiri" data-cls="r">Bildiri</option>
+                <option value="Savunuculuk" data-cls="">Savunuculuk</option>
+                <option value="Rapor" data-cls="r">Rapor</option>
+                <option value="Dayanışma" data-cls="">Dayanışma</option>
+                <option value="İnsan Hakları" data-cls="g">İnsan Hakları</option>
+                <option value="Açıklama" data-cls="r">Açıklama</option>
+                <option value="Duyuru" data-cls="">Duyuru</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Başlık</label>
+              <input class="form-input" id="haber-title" placeholder="Haber başlığı..."/>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Özet (Ana sayfada görünür)</label>
+              <textarea class="form-textarea" id="haber-excerpt" style="min-height:80px" placeholder="Kısa özet..."></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tarih</label>
+              <input class="form-input" id="haber-date" type="text" placeholder="23 Aralık 2025"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Slug (Benzersiz ID)</label>
+              <input class="form-input" id="haber-slug2" placeholder="otomatik" readonly style="opacity:0.5"/>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">İçerik (HTML destekler)</label>
+              <div class="editor-toolbar">
+                <button onclick="insertTag('haber-body','<h2>','</h2>')">H2</button>
+                <button onclick="insertTag('haber-body','<h3>','</h3>')">H3</button>
+                <button onclick="insertTag('haber-body','<p>','</p>')">P</button>
+                <button onclick="insertTag('haber-body','<strong>','</strong>')"><b>B</b></button>
+                <button onclick="insertTag('haber-body','<em>','</em>')"><i>I</i></button>
+                <button onclick="insertTag('haber-body','<ul>\n<li>','</li>\n</ul>')">Liste</button>
+                <button onclick="insertTag('haber-body','<li>','</li>')">Madde</button>
+                <button onclick="insertTag('haber-body','<blockquote>','</blockquote>')">Alıntı</button>
+                <button onclick="insertTag('haber-body','<br/>','')">BR</button>
+              </div>
+              <textarea class="form-textarea tall editor-textarea" id="haber-body" placeholder="<p>İlk paragraf...</p>&#10;&#10;<h2>Alt Başlık</h2>&#10;<p>Devam...</p>"></textarea>
+              <div class="form-hint">HTML etiketleri kullanabilirsiniz: &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;ul&gt;&lt;li&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;blockquote&gt;</div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="saveHaber()">💾 Kaydet & Yayınla</button>
+            <button class="btn btn-secondary" onclick="showPage('haberler')">İptal</button>
+            <span id="haber-save-status" style="font-size:12px;color:var(--text-faint)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETKİNLİKLER LİSTESİ -->
+      <div class="page" id="page-etkinlikler">
+        <div class="list-toolbar">
+          <input class="search-input" placeholder="Etkinlik ara..." oninput="filterTable('etkinlik-table',this.value)"/>
+          <button class="btn btn-primary" onclick="showPage('etkinlik-yeni')">+ Yeni Etkinlik</button>
+        </div>
+        <div class="list-table">
+          <table id="etkinlik-table">
+            <thead><tr><th>Başlık</th><th>Kategori</th><th>Tarih</th><th>İşlemler</th></tr></thead>
+            <tbody id="etkinlik-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ETKİNLİK FORM -->
+      <div class="page" id="page-etkinlik-yeni">
+        <div class="form-section">
+          <div class="form-section-title" id="etkinlik-form-title">Yeni Etkinlik Ekle</div>
+          <input type="hidden" id="etkinlik-edit-slug"/>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Slug</label>
+              <input class="form-input" id="etkinlik-slug" placeholder="etkinlik-adi" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select class="form-select" id="etkinlik-tag">
+                <option>Eğitim Programı</option>
+                <option>Sempozyum</option>
+                <option>Eylem</option>
+                <option>Panel</option>
+                <option>Atölye</option>
+                <option>Toplantı</option>
+                <option>Hukuki Süreç</option>
+                <option>Duyuru</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Başlık</label>
+              <input class="form-input" id="etkinlik-title" placeholder="Etkinlik başlığı..."/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gün (Sayı)</label>
+              <input class="form-input" id="etkinlik-gun" placeholder="12 veya —"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ay (3 harf)</label>
+              <input class="form-input" id="etkinlik-ay" placeholder="Ara, Oca, May..."/>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Tarih (Tam metin)</label>
+              <input class="form-input" id="etkinlik-date" placeholder="12 Aralık 2025"/>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Kısa Açıklama (Ana sayfada görünür)</label>
+              <textarea class="form-textarea" id="etkinlik-desc" style="min-height:80px" placeholder="Kısa açıklama..."></textarea>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Detaylı İçerik (HTML)</label>
+              <div class="editor-toolbar">
+                <button onclick="insertTag('etkinlik-body','<h2>','</h2>')">H2</button>
+                <button onclick="insertTag('etkinlik-body','<h3>','</h3>')">H3</button>
+                <button onclick="insertTag('etkinlik-body','<p>','</p>')">P</button>
+                <button onclick="insertTag('etkinlik-body','<strong>','</strong>')"><b>B</b></button>
+                <button onclick="insertTag('etkinlik-body','<ul>\n<li>','</li>\n</ul>')">Liste</button>
+                <button onclick="insertTag('etkinlik-body','<li>','</li>')">Madde</button>
+                <button onclick="insertTag('etkinlik-body','<blockquote>','</blockquote>')">Alıntı</button>
+              </div>
+              <textarea class="form-textarea tall editor-textarea" id="etkinlik-body" placeholder="<p>Etkinlik detayları...</p>"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="saveEtkinlik()">💾 Kaydet & Yayınla</button>
+            <button class="btn btn-secondary" onclick="showPage('etkinlikler')">İptal</button>
+            <span id="etkinlik-save-status" style="font-size:12px;color:var(--text-faint)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TICKER EDITOR -->
+      <div class="page" id="page-ticker">
+        <div class="form-section" style="max-width:700px">
+          <div class="form-section-title">Duyuru Bandı Yönetimi</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6">Sitenin üst kısmında kayan duyuru bandını buradan yönetebilirsiniz. Her satır bir duyuru. <strong style="color:var(--text)">Güçlü</strong> etiketiyle vurgulu başlık ekleyebilirsiniz.</p>
+          <div id="ticker-items"></div>
+          <button class="btn btn-secondary" onclick="addTickerItem()" style="margin-bottom:1.5rem">+ Duyuru Ekle</button>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="saveTicker()">💾 Kaydet & Yayınla</button>
+            <span id="ticker-save-status" style="font-size:12px;color:var(--text-faint)"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">İptal</button>
+      <button class="btn btn-danger" id="modal-confirm">Sil</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loading-text">GitHub'a kaydediliyor...</div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const GH_TOKEN  = ''; // Token ortam değişkeninden alınacak
+const GH_OWNER  = 'EbubekirGonan';
+const GH_REPO   = 'todap';
+const GH_BRANCH = 'main';
+const INDEX_PATH = 'index.html';
+const ADMIN_PASSWORD = 'todap2025';
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin() {
+  const p = document.getElementById('login-pass').value;
+  if (p === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    init();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+}
+
+// ============================================================
+// GITHUB API
+// ============================================================
+async function ghGet(path) {
+  const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`, {
+    headers: { Authorization: `token ${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+  });
+  if (!r.ok) throw new Error(`GitHub GET failed: ${r.status}`);
+  return r.json();
+}
+
+async function ghPut(path, content, message, sha) {
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))), branch: GH_BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || `GitHub PUT failed: ${r.status}`); }
+  return r.json();
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let indexContent = '';
+let indexSha = '';
+let DATA = { haberler: {}, etkinlikler: {} };
+let tickerItems = [];
+
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+  showLoading('Site verileri yükleniyor...');
+  try {
+    const f = await ghGet(INDEX_PATH);
+    indexSha = f.sha;
+    indexContent = decodeURIComponent(escape(atob(f.content.replace(/\n/g,''))));
+    parseData();
+    parseTicker();
+    renderDashboard();
+    renderHaberTable();
+    renderEtkinlikTable();
+    renderTickerEditor();
+    hideLoading();
+  } catch(e) {
+    hideLoading();
+    showToast('Veri yüklenemedi: ' + e.message, 'error');
+  }
+}
+
+// ============================================================
+// PARSE DATA FROM HTML
+// ============================================================
+function parseData() {
+  const m = indexContent.match(/const DATA = ({[\s\S]*?});\s*\n\s*let tickerItems/);
+  if (m) {
+    try { DATA = eval('(' + m[1] + ')'); } catch(e) { DATA = {haberler:{}, etkinlikler:{}}; }
+  } else {
+    // Try alternative
+    const m2 = indexContent.match(/const DATA = ({[\s\S]*?});\s*\n/);
+    if (m2) { try { DATA = eval('(' + m2[1] + ')'); } catch(e) {} }
+  }
+}
+
+function parseTicker() {
+  const m = indexContent.match(/let tickerItems = (\[[\s\S]*?\]);\s*\n/);
+  if (m) {
+    try { tickerItems = eval(m[1]); } catch(e) { tickerItems = []; }
+  } else {
+    // Parse from HTML ticker
+    const ticks = [];
+    const re = /<span><strong>(.*?)<\/strong>\s*·\s*(.*?)<\/span>/g;
+    let t;
+    const half = [];
+    while ((t = re.exec(indexContent)) !== null) half.push({ bold: t[1], text: t[2] });
+    // deduplicate (ticker is doubled)
+    const seen = new Set();
+    for (const h of half) {
+      const k = h.bold + h.text;
+      if (!seen.has(k)) { seen.add(k); ticks.push(h); }
+    }
+    tickerItems = ticks;
+  }
+}
+
+// ============================================================
+// SERIALIZE DATA BACK TO HTML
+// ============================================================
+function serializeAndSave(msg) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Build new DATA object string
+      const dataStr = buildDataString();
+      const tickerStr = buildTickerString();
+      const tickerHtml = buildTickerHtml();
+
+      let html = indexContent;
+
+      // Replace DATA object
+      html = html.replace(/const DATA = {[\s\S]*?};\s*\nlet tickerItems/, `const DATA = ${dataStr};\nlet tickerItems`);
+
+      // Replace tickerItems
+      html = html.replace(/let tickerItems = \[[\s\S]*?\];\s*\n/, `let tickerItems = ${tickerStr};\n`);
+
+      // Replace ticker HTML
+      html = html.replace(
+        /<div class="ticker-inner">[\s\S]*?<\/div><\/div>/,
+        `<div class="ticker-inner">\n${tickerHtml}\n</div></div>`
+      );
+
+      showLoading('GitHub\'a kaydediliyor...');
+      const result = await ghPut(INDEX_PATH, html, msg, indexSha);
+      indexSha = result.content.sha;
+      indexContent = html;
+      hideLoading();
+      resolve();
+    } catch(e) {
+      hideLoading();
+      reject(e);
+    }
+  });
+}
+
+function buildDataString() {
+  const haberEntries = Object.entries(DATA.haberler).map(([slug, d]) => {
+    const body = d.body.replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    return `'${slug}':{tag:${JSON.stringify(d.tag)},cls:${JSON.stringify(d.cls||'')},title:${JSON.stringify(d.title)},date:${JSON.stringify(d.date)},excerpt:${JSON.stringify(d.excerpt||'')},body:\`${body}\`}`;
+  }).join(',\n');
+
+  const etkinlikEntries = Object.entries(DATA.etkinlikler).map(([slug, d]) => {
+    const body = d.body.replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    return `'${slug}':{tag:${JSON.stringify(d.tag)},gun:${JSON.stringify(d.gun)},ay:${JSON.stringify(d.ay)},title:${JSON.stringify(d.title)},date:${JSON.stringify(d.date)},desc:${JSON.stringify(d.desc||'')},body:\`${body}\`}`;
+  }).join(',\n');
+
+  return `{\nhaberler: {\n${haberEntries}\n},\netkinlikler: {\n${etkinlikEntries}\n}\n}`;
+}
+
+function buildTickerString() {
+  return JSON.stringify(tickerItems, null, 2);
+}
+
+function buildTickerHtml() {
+  const doubled = [...tickerItems, ...tickerItems];
+  return doubled.map(t => `<span><strong>${t.bold}</strong> · ${t.text}</span>`).join('\n');
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const haberCount = Object.keys(DATA.haberler).length;
+  const etkinlikCount = Object.keys(DATA.etkinlikler).length;
+  document.getElementById('s-haber').textContent = haberCount;
+  document.getElementById('s-etkinlik').textContent = etkinlikCount;
+
+  // Widget - son haberler
+  const wh = document.getElementById('widget-haberler');
+  const habEntries = Object.entries(DATA.haberler).slice(0, 4);
+  if (!habEntries.length) { wh.innerHTML = '<div style="color:var(--text-faint);font-size:13px;padding:1rem 0">Henüz haber yok.</div>'; }
+  else {
+    wh.innerHTML = habEntries.map(([slug,d]) => `
+      <div class="widget-item">
+        <div><div class="widget-item-title">${d.title}</div><div class="widget-item-meta">${d.date} · <span class="tag ${d.cls==='r'?'tag-red':d.cls==='g'?'tag-green':'tag-mustard'}">${d.tag}</span></div></div>
+        <div class="widget-item-actions"><button class="btn btn-secondary btn-sm" onclick="editHaber('${slug}')">Düzenle</button></div>
+      </div>`).join('');
+  }
+
+  // Widget - son etkinlikler
+  const we = document.getElementById('widget-etkinlikler');
+  const etkEntries = Object.entries(DATA.etkinlikler).slice(0, 4);
+  if (!etkEntries.length) { we.innerHTML = '<div style="color:var(--text-faint);font-size:13px;padding:1rem 0">Henüz etkinlik yok.</div>'; }
+  else {
+    we.innerHTML = etkEntries.map(([slug,d]) => `
+      <div class="widget-item">
+        <div><div class="widget-item-title">${d.title}</div><div class="widget-item-meta">${d.date} · <span class="tag tag-mustard">${d.tag}</span></div></div>
+        <div class="widget-item-actions"><button class="btn btn-secondary btn-sm" onclick="editEtkinlik('${slug}')">Düzenle</button></div>
+      </div>`).join('');
+  }
+}
+
+// ============================================================
+// HABERLER
+// ============================================================
+function renderHaberTable() {
+  const tbody = document.getElementById('haber-tbody');
+  const entries = Object.entries(DATA.haberler);
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📰</div><div class="empty-state-text">Henüz haber eklenmemiş.</div><button class="btn btn-primary" onclick="showPage(\'haber-yeni\')">İlk Haberi Ekle</button></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = entries.map(([slug,d]) => `
+    <tr>
+      <td class="td-title">${d.title}</td>
+      <td><span class="tag ${d.cls==='r'?'tag-red':d.cls==='g'?'tag-green':'tag-mustard'}">${d.tag}</span></td>
+      <td class="td-date">${d.date}</td>
+      <td class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editHaber('${slug}')">Düzenle</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteHaber('${slug}')">Sil</button>
+      </td>
+    </tr>`).join('');
+}
+
+function editHaber(slug) {
+  const d = DATA.haberler[slug];
+  if (!d) return;
+  document.getElementById('haber-form-title').textContent = 'Haberi Düzenle';
+  document.getElementById('haber-edit-slug').value = slug;
+  document.getElementById('haber-slug').value = slug;
+  document.getElementById('haber-slug').disabled = true;
+  document.getElementById('haber-tag').value = d.tag;
+  document.getElementById('haber-title').value = d.title;
+  document.getElementById('haber-excerpt').value = d.excerpt || '';
+  document.getElementById('haber-date').value = d.date;
+  document.getElementById('haber-body').value = d.body;
+  showPage('haber-yeni');
+}
+
+function resetHaberForm() {
+  document.getElementById('haber-form-title').textContent = 'Yeni Haber Ekle';
+  document.getElementById('haber-edit-slug').value = '';
+  document.getElementById('haber-slug').value = '';
+  document.getElementById('haber-slug').disabled = false;
+  document.getElementById('haber-tag').value = 'Bildiri';
+  document.getElementById('haber-title').value = '';
+  document.getElementById('haber-excerpt').value = '';
+  document.getElementById('haber-date').value = '';
+  document.getElementById('haber-body').value = '';
+}
+
+async function saveHaber() {
+  const editSlug = document.getElementById('haber-edit-slug').value;
+  const slug = editSlug || document.getElementById('haber-slug').value.trim();
+  const title = document.getElementById('haber-title').value.trim();
+  const tag = document.getElementById('haber-tag').value;
+  const excerpt = document.getElementById('haber-excerpt').value.trim();
+  const date = document.getElementById('haber-date').value.trim();
+  const body = document.getElementById('haber-body').value.trim();
+
+  if (!slug) { showToast('Slug alanı boş olamaz!', 'error'); return; }
+  if (!title) { showToast('Başlık alanı boş olamaz!', 'error'); return; }
+  if (!body) { showToast('İçerik alanı boş olamaz!', 'error'); return; }
+
+  const tagEl = document.getElementById('haber-tag');
+  const cls = tagEl.selectedOptions[0].dataset.cls || '';
+
+  DATA.haberler[slug] = { tag, cls, title, date: date || new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}), excerpt, body };
+
+  try {
+    await serializeAndSave(`[Admin] Haber ${editSlug ? 'güncellendi' : 'eklendi'}: ${title}`);
+    showToast('✓ Haber kaydedildi! Site birkaç saniyede güncellenir.', 'success');
+    renderDashboard();
+    renderHaberTable();
+    resetHaberForm();
+    showPage('haberler');
+  } catch(e) {
+    showToast('Hata: ' + e.message, 'error');
+  }
+}
+
+function confirmDeleteHaber(slug) {
+  showModal('Haberi Sil', `"${DATA.haberler[slug]?.title}" başlıklı haberi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`, async () => {
+    delete DATA.haberler[slug];
+    try {
+      await serializeAndSave(`[Admin] Haber silindi: ${slug}`);
+      showToast('Haber silindi.', 'success');
+      renderDashboard();
+      renderHaberTable();
+    } catch(e) { showToast('Hata: ' + e.message, 'error'); }
+  });
+}
+
+// ============================================================
+// ETKİNLİKLER
+// ============================================================
+function renderEtkinlikTable() {
+  const tbody = document.getElementById('etkinlik-tbody');
+  const entries = Object.entries(DATA.etkinlikler);
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-text">Henüz etkinlik eklenmemiş.</div><button class="btn btn-primary" onclick="showPage(\'etkinlik-yeni\')">İlk Etkinliği Ekle</button></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = entries.map(([slug,d]) => `
+    <tr>
+      <td class="td-title">${d.title}</td>
+      <td><span class="tag tag-mustard">${d.tag}</span></td>
+      <td class="td-date">${d.gun} ${d.ay}</td>
+      <td class="td-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editEtkinlik('${slug}')">Düzenle</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteEtkinlik('${slug}')">Sil</button>
+      </td>
+    </tr>`).join('');
+}
+
+function editEtkinlik(slug) {
+  const d = DATA.etkinlikler[slug];
+  if (!d) return;
+  document.getElementById('etkinlik-form-title').textContent = 'Etkinliği Düzenle';
+  document.getElementById('etkinlik-edit-slug').value = slug;
+  document.getElementById('etkinlik-slug').value = slug;
+  document.getElementById('etkinlik-slug').disabled = true;
+  document.getElementById('etkinlik-tag').value = d.tag;
+  document.getElementById('etkinlik-title').value = d.title;
+  document.getElementById('etkinlik-gun').value = d.gun;
+  document.getElementById('etkinlik-ay').value = d.ay;
+  document.getElementById('etkinlik-date').value = d.date;
+  document.getElementById('etkinlik-desc').value = d.desc || '';
+  document.getElementById('etkinlik-body').value = d.body;
+  showPage('etkinlik-yeni');
+}
+
+function resetEtkinlikForm() {
+  document.getElementById('etkinlik-form-title').textContent = 'Yeni Etkinlik Ekle';
+  document.getElementById('etkinlik-edit-slug').value = '';
+  document.getElementById('etkinlik-slug').value = '';
+  document.getElementById('etkinlik-slug').disabled = false;
+  ['etkinlik-tag','etkinlik-title','etkinlik-gun','etkinlik-ay','etkinlik-date','etkinlik-desc','etkinlik-body'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ''; });
+}
+
+async function saveEtkinlik() {
+  const editSlug = document.getElementById('etkinlik-edit-slug').value;
+  const slug = editSlug || document.getElementById('etkinlik-slug').value.trim();
+  const title = document.getElementById('etkinlik-title').value.trim();
+  const tag = document.getElementById('etkinlik-tag').value;
+  const gun = document.getElementById('etkinlik-gun').value.trim();
+  const ay = document.getElementById('etkinlik-ay').value.trim();
+  const date = document.getElementById('etkinlik-date').value.trim();
+  const desc = document.getElementById('etkinlik-desc').value.trim();
+  const body = document.getElementById('etkinlik-body').value.trim();
+
+  if (!slug) { showToast('Slug alanı boş olamaz!', 'error'); return; }
+  if (!title) { showToast('Başlık alanı boş olamaz!', 'error'); return; }
+
+  DATA.etkinlikler[slug] = { tag, gun: gun||'—', ay: ay||'?', title, date: date || gun + ' ' + ay, desc, body };
+
+  try {
+    await serializeAndSave(`[Admin] Etkinlik ${editSlug ? 'güncellendi' : 'eklendi'}: ${title}`);
+    showToast('✓ Etkinlik kaydedildi! Site birkaç saniyede güncellenir.', 'success');
+    renderDashboard();
+    renderEtkinlikTable();
+    resetEtkinlikForm();
+    showPage('etkinlikler');
+  } catch(e) {
+    showToast('Hata: ' + e.message, 'error');
+  }
+}
+
+function confirmDeleteEtkinlik(slug) {
+  showModal('Etkinliği Sil', `"${DATA.etkinlikler[slug]?.title}" etkinliğini silmek istediğinize emin misiniz?`, async () => {
+    delete DATA.etkinlikler[slug];
+    try {
+      await serializeAndSave(`[Admin] Etkinlik silindi: ${slug}`);
+      showToast('Etkinlik silindi.', 'success');
+      renderDashboard();
+      renderEtkinlikTable();
+    } catch(e) { showToast('Hata: ' + e.message, 'error'); }
+  });
+}
+
+// ============================================================
+// TICKER
+// ============================================================
+function renderTickerEditor() {
+  const container = document.getElementById('ticker-items');
+  container.innerHTML = tickerItems.map((t, i) => `
+    <div class="ticker-item" id="tick-${i}">
+      <input type="text" value="${t.bold}" placeholder="Etiket (Yeni, Bildiri...)" style="max-width:140px" onchange="tickerItems[${i}].bold=this.value"/>
+      <span style="color:var(--text-faint);font-size:13px">·</span>
+      <input type="text" value="${t.text}" placeholder="Duyuru metni..." onchange="tickerItems[${i}].text=this.value"/>
+      <button class="btn btn-danger btn-sm" onclick="removeTickerItem(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addTickerItem() {
+  tickerItems.push({ bold: 'Yeni', text: 'Duyuru metni...' });
+  renderTickerEditor();
+}
+
+function removeTickerItem(i) {
+  tickerItems.splice(i, 1);
+  renderTickerEditor();
+}
+
+async function saveTicker() {
+  // Collect current values from inputs
+  const container = document.getElementById('ticker-items');
+  const items = container.querySelectorAll('.ticker-item');
+  tickerItems = Array.from(items).map(item => {
+    const inputs = item.querySelectorAll('input');
+    return { bold: inputs[0].value, text: inputs[1].value };
+  });
+
+  try {
+    await serializeAndSave('[Admin] Duyuru bandı güncellendi');
+    showToast('✓ Duyuru bandı güncellendi!', 'success');
+    renderTickerEditor();
+  } catch(e) {
+    showToast('Hata: ' + e.message, 'error');
+  }
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+
+  const titles = {
+    'dashboard': 'Dashboard', 'haberler': 'Haberler', 'haber-yeni': 'Haber Ekle / Düzenle',
+    'etkinlikler': 'Etkinlikler', 'etkinlik-yeni': 'Etkinlik Ekle / Düzenle', 'ticker': 'Duyuru Bandı'
+  };
+  document.getElementById('topbar-title').textContent = titles[name] || name;
+
+  // Activate nav item
+  const navMap = { 'dashboard':'dashboard', 'haberler':'haberler', 'haber-yeni':'haberler', 'etkinlikler':'etkinlikler', 'etkinlik-yeni':'etkinlikler', 'ticker':'ticker' };
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes("'"+navMap[name]+"'")) n.classList.add('active');
+  });
+
+  if (name === 'haber-yeni' && !document.getElementById('haber-edit-slug').value) resetHaberForm();
+  if (name === 'etkinlik-yeni' && !document.getElementById('etkinlik-edit-slug').value) resetEtkinlikForm();
+}
+
+function filterTable(tableId, q) {
+  const table = document.getElementById(tableId);
+  table.querySelectorAll('tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function insertTag(textareaId, open, close) {
+  const ta = document.getElementById(textareaId);
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + open + selected + close + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + open.length + selected.length + close.length;
+  ta.focus();
+}
+
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.className = `toast toast-${type} show`;
+  t.textContent = msg;
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+let modalCallback = null;
+function showModal(title, body, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  document.getElementById('modal-overlay').classList.add('show');
+  modalCallback = onConfirm;
+  document.getElementById('modal-confirm').onclick = () => { closeModal(); if(modalCallback) modalCallback(); };
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+
+function showLoading(txt) {
+  document.getElementById('loading-text').textContent = txt || 'İşleniyor...';
+  document.getElementById('loading').classList.add('show');
+}
+
+function hideLoading() { document.getElementById('loading').classList.remove('show'); }
+</script>
 </body>
 </html>
