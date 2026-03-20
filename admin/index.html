@@ -513,7 +513,7 @@ body{font-family:var(--fd);background:var(--bg);color:var(--text);font-size:14px
 // ============================================================
 // CONFIG
 // ============================================================
-const GH_TOKEN  = ''; // Token ortam değişkeninden alınacak
+const GH_TOKEN  = import.meta.env.VITE_GH_TOKEN || '';
 const GH_OWNER  = 'EbubekirGonan';
 const GH_REPO   = 'todap';
 const GH_BRANCH = 'main';
