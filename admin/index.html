@@ -214,6 +214,8 @@ body{font-family:var(--fd);background:var(--bg);color:var(--text);font-size:14px
   <div class="login-box">
     <div class="login-logo">TOD<span>AP</span></div>
     <div class="login-sub">Yönetici Paneli</div>
+    <label class="login-label">GitHub Token</label>
+    <input class="login-input" type="password" id="login-token" placeholder="ghp_..." />
     <label class="login-label">Şifre</label>
     <input class="login-input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
@@ -513,31 +515,48 @@ body{font-family:var(--fd);background:var(--bg);color:var(--text);font-size:14px
 // ============================================================
 // CONFIG
 // ============================================================
-const GH_TOKEN  = import.meta.env.VITE_GH_TOKEN || '';
 const GH_OWNER  = 'EbubekirGonan';
 const GH_REPO   = 'todap';
 const GH_BRANCH = 'main';
 const INDEX_PATH = 'index.html';
 const ADMIN_PASSWORD = 'todap2025';
 
+// Token'ı localStorage'dan al
+let GH_TOKEN = localStorage.getItem('GH_TOKEN') || '';
+
 // ============================================================
 // AUTH
 // ============================================================
 function doLogin() {
+  const token = document.getElementById('login-token').value.trim();
   const p = document.getElementById('login-pass').value;
+  
+  if (!token) {
+    document.getElementById('login-error').innerHTML = 'Lütfen GitHub Token\'ını girin.';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  
   if (p === ADMIN_PASSWORD) {
+    GH_TOKEN = token;
+    localStorage.setItem('GH_TOKEN', token);
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     init();
   } else {
+    document.getElementById('login-error').innerHTML = 'Hatalı şifre. Tekrar deneyin.';
     document.getElementById('login-error').style.display = 'block';
   }
 }
 
 function logout() {
+  localStorage.removeItem('GH_TOKEN');
+  GH_TOKEN = '';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-token').value = '';
   document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
 }
 
 // ============================================================
