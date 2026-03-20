@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Etkinlik — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.back-link{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--burgundy);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:2.5rem}
+.back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html">Birimler</a></li>
+    <li><a href="haberler.html">Haberler</a></li>
+    <li><a href="yayinlar.html">Yayınlar</a></li>
+    <li><a href="etkinlikler.html" class="active">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+<div id="page-content"></div>
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul><li><a href="haberler.html">Haberler</a></li><li><a href="etkinlikler.html">Etkinlikler</a></li></ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul><li><a href="iletisim.html">İletişim</a></li><li><a href="uyelik.html">Üyelik</a></li></ul></div>
+    <div class="footer-col"></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+const id = TODAP.getParam('id');
+const etk = data.etkinlikler.find(e => e.id === id);
+if (etk) {
+  document.title = etk.baslik + ' — TODAP';
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / <a href="etkinlikler.html">Etkinlikler</a> / ${etk.kategori}</div>
+        <h1>${etk.baslik}</h1>
+        <p>${etk.ozet}</p>
+      </div>
+    </div>
+    <main>
+      <a class="back-link" href="etkinlikler.html">← Tüm Etkinlikler</a>
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:2rem;flex-wrap:wrap">
+        <span style="font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;background:var(--mustard);color:#fff;border-radius:2px">${etk.kategori}</span>
+        <span style="font-family:var(--font-display);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint)">${TODAP.formatDate(etk.tarih)}</span>
+      </div>
+      <div class="content-prose">${etk.icerik}</div>
+      <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)">
+        <a class="btn-primary" href="iletisim.html">Kayıt / Bilgi Al</a>
+      </div>
+    </main>`;
+} else {
+  document.getElementById('page-content').innerHTML = '<div class="page-hero"><div class="page-hero-inner"><h1>Etkinlik Bulunamadı</h1></div></div><main><a class="back-link" href="etkinlikler.html">← Tüm Etkinlikler</a></main>';
+}
+</script>
+</body>
+</html>

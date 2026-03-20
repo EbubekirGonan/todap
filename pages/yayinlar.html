@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yayınlar — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.pub-big-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.pub-big-card{background:var(--warm-white);border:1px solid var(--border);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:all .2s}
+.pub-big-card:hover{border-color:var(--burgundy)}
+.pub-card-top{background:var(--burgundy-light);padding:2rem;border-bottom:1px solid var(--border)}
+.pub-card-tur{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--burgundy);margin-bottom:.75rem;display:block}
+.pub-big-card h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:0}
+.pub-card-body{padding:1.5rem}
+.pub-card-body p{font-size:14px;color:var(--ink-muted);line-height:1.6;margin-bottom:1rem}
+.pub-ext-link{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mustard);display:inline-flex;align-items:center;gap:4px}
+.pub-ext-link::after{content:'↗'}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html">Birimler</a></li>
+    <li><a href="haberler.html">Haberler</a></li>
+    <li><a href="yayinlar.html" class="active">Yayınlar</a></li>
+    <li><a href="etkinlikler.html">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / Yayınlar</div>
+    <h1>Yayınlar & <em>Kaynaklar</em></h1>
+    <p>TODAP'ın süreli yayınları, raporları ve kılavuzları.</p>
+  </div>
+</div>
+<main>
+  <div class="pub-big-grid" id="pub-grid"></div>
+</main>
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="haberler.html">Haberler</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+    <div class="footer-col"><h4>Birimler</h4><ul><li><a href="birimler.html">Tüm Birimler</a></li></ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul><li><a href="iletisim.html">İletişim</a></li><li><a href="uyelik.html">Üyelik</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+document.getElementById('pub-grid').innerHTML = data.yayinlar.filter(y=>y.aktif).map(y=>`
+  <a class="pub-big-card" href="${y.url}" target="_blank">
+    <div class="pub-card-top">
+      <span class="pub-card-tur">${y.tur}</span>
+      <h3>${y.baslik}</h3>
+    </div>
+    <div class="pub-card-body">
+      <p>${y.ozet}</p>
+      <span class="pub-ext-link">Görüntüle / İndir</span>
+    </div>
+  </a>`).join('');
+</script>
+</body>
+</html>

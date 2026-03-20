@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Birimler — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.birim-page-card{background:var(--warm-white);border:1px solid var(--border);border-radius:10px;padding:2.5rem;margin-bottom:16px;scroll-margin-top:80px}
+.birim-page-card:hover{border-color:var(--burgundy)}
+.birim-no{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--burgundy);opacity:0.5;margin-bottom:0.75rem}
+.birim-page-card h2{font-family:var(--font-display);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:-0.01em;color:var(--ink);margin-bottom:1rem}
+.birim-page-card .content-prose p{font-size:15px}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html" class="active">Birimler</a></li>
+    <li><a href="haberler.html">Haberler</a></li>
+    <li><a href="yayinlar.html">Yayınlar</a></li>
+    <li><a href="etkinlikler.html">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / Birimler</div>
+    <h1>Birimler & <em>Komisyonlar</em></h1>
+    <p>TODAP bünyesindeki çalışma birimleri ve komisyonlar.</p>
+  </div>
+</div>
+<main id="birimler-content"></main>
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul><li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="haberler.html">Haberler</a></li><li><a href="yayinlar.html">Yayınlar</a></li><li><a href="iletisim.html">İletişim</a></li></ul></div>
+    <div class="footer-col"><h4>Birimler</h4><ul id="footer-birimler"></ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul><li><a href="iletisim.html">İletişim</a></li><li><a href="uyelik.html">Üyelik</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+let html = '';
+data.birimler.filter(b=>b.aktif).forEach(b => {
+  html += `<div class="birim-page-card" id="${b.id}">
+    <div class="birim-no">Birim ${b.no}</div>
+    <h2>${b.baslik}</h2>
+    <div class="content-prose">${b.icerik}</div>
+    <a class="read-more" href="iletisim.html" style="margin-top:1.5rem;display:inline-flex">İletişime Geç</a>
+  </div>`;
+});
+document.getElementById('birimler-content').innerHTML = html;
+document.getElementById('footer-birimler').innerHTML = data.birimler.filter(b=>b.aktif).map(b=>`<li><a href="#${b.id}">${b.baslik}</a></li>`).join('');
+// Scroll to anchor
+const hash = window.location.hash;
+if(hash) { setTimeout(()=>{ const el=document.querySelector(hash); if(el)el.scrollIntoView({behavior:'smooth'}); },200); }
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Etkinlikler — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.etk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.etk-card{background:var(--warm-white);border:1px solid var(--border);border-radius:8px;padding:0;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:all .2s}
+.etk-card:hover{border-color:var(--burgundy)}
+.etk-card-top{background:var(--burgundy);padding:1.5rem;display:flex;justify-content:space-between;align-items:center}
+.etk-big-date{font-family:var(--font-display);font-size:42px;font-weight:800;color:#fff;line-height:1}
+.etk-big-month{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:2px}
+.etk-card-cat{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--mustard);background:rgba(0,0,0,0.2);padding:4px 10px;border-radius:2px}
+.etk-card-body{padding:1.5rem}
+.etk-card-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:0.5rem}
+.etk-card-desc{font-size:14px;color:var(--ink-muted);line-height:1.6}
+.etk-detail-date{font-family:var(--font-display);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-faint)}
+.back-link{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--burgundy);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:2.5rem}
+.back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html">Birimler</a></li>
+    <li><a href="haberler.html">Haberler</a></li>
+    <li><a href="yayinlar.html">Yayınlar</a></li>
+    <li><a href="etkinlikler.html" class="active">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+<div id="page-content"></div>
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li><li><a href="haberler.html">Haberler</a></li>
+      <li><a href="yayinlar.html">Yayınlar</a></li><li><a href="iletisim.html">İletişim</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Birimler</h4><ul>
+      <li><a href="birimler.html#b1">Psikolog Hakları</a></li><li><a href="birimler.html#b2">Kadın Komisyonu</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul>
+      <li><a href="iletisim.html">İletişim</a></li><li><a href="uyelik.html">Üyelik</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+const id = TODAP.getParam('id');
+if(id) {
+  const etk = data.etkinlikler.find(e=>e.id===id);
+  document.title = (etk ? etk.baslik : 'Etkinlik') + ' — TODAP';
+  document.getElementById('page-content').innerHTML = etk ? `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / <a href="etkinlikler.html">Etkinlikler</a> / ${etk.kategori}</div>
+        <h1>${etk.baslik}</h1>
+      </div>
+    </div>
+    <main>
+      <a class="back-link" href="etkinlikler.html">← Tüm Etkinlikler</a>
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:2rem;flex-wrap:wrap">
+        <span style="font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;background:var(--mustard);color:#fff;border-radius:2px">${etk.kategori}</span>
+        <span class="etk-detail-date">${TODAP.formatDate(etk.tarih)}</span>
+      </div>
+      <div class="content-prose">${etk.icerik}</div>
+    </main>` : '<main><p>Etkinlik bulunamadı.</p></main>';
+} else {
+  document.title = 'Etkinlikler — TODAP';
+  let html = `<div class="page-hero"><div class="page-hero-inner">
+    <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / Etkinlikler</div>
+    <h1>Etkinlikler & <em>Duyurular</em></h1>
+    <p>TODAP'ın gerçekleştirdiği ve planlanan tüm etkinlikler.</p>
+  </div></div><main><div class="etk-grid">`;
+  data.etkinlikler.filter(e=>e.aktif).forEach(e => {
+    html += `<a class="etk-card" href="etkinlik.html?id=${e.id}">
+      <div class="etk-card-top">
+        <div><div class="etk-big-date">${e.gun}</div><div class="etk-big-month">${e.ay}</div></div>
+        <div class="etk-card-cat">${e.kategori}</div>
+      </div>
+      <div class="etk-card-body">
+        <div class="etk-card-title">${e.baslik}</div>
+        <div class="etk-card-desc">${e.ozet}</div>
+      </div>
+    </a>`;
+  });
+  html += `</div></main>`;
+  document.getElementById('page-content').innerHTML = html;
+}
+</script>
+</body>
+</html>

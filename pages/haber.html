@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Haber — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.back-link{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--burgundy);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:2.5rem}
+.back-link:hover{text-decoration:underline}
+.detail-meta{display:flex;gap:16px;align-items:center;margin-bottom:2rem;flex-wrap:wrap}
+.detail-cat{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;background:var(--burgundy);color:#fff;border-radius:2px}
+.detail-date{font-family:var(--font-display);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-faint)}
+.detail-title{font-family:var(--font-display);font-size:clamp(26px,4vw,44px);font-weight:800;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);margin-bottom:1.5rem;max-width:800px}
+.detail-body p{font-size:17px;line-height:1.8;color:var(--ink-muted);margin-bottom:1.25rem;max-width:680px}
+.share-bar{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;gap:1rem;align-items:center}
+.share-bar span{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint)}
+.share-btn{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);border-radius:2px;background:transparent;color:var(--ink-muted);cursor:pointer;text-decoration:none;transition:all .2s}
+.share-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.other-news{margin-top:4rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.other-news h3{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1.5rem}
+.other-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.other-card{border:1px solid var(--border);border-radius:6px;padding:1.25rem;text-decoration:none;color:inherit;display:block;transition:all .2s}
+.other-card:hover{border-color:var(--burgundy);background:var(--burgundy-light)}
+.other-cat{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--mustard);margin-bottom:4px}
+.other-title{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html">Birimler</a></li>
+    <li><a href="haberler.html" class="active">Haberler</a></li>
+    <li><a href="yayinlar.html">Yayınlar</a></li>
+    <li><a href="etkinlikler.html">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+
+<div id="page-content">
+  <div class="page-hero"><div class="page-hero-inner"><p>Yükleniyor...</p></div></div>
+</div>
+
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="birimler.html">Birimler</a></li>
+      <li><a href="haberler.html">Haberler</a></li>
+      <li><a href="yayinlar.html">Yayınlar</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul>
+      <li><a href="iletisim.html">İletişim</a></li>
+      <li><a href="https://twitter.com/todapder" target="_blank">@todapder</a></li>
+      <li><a href="uyelik.html">Üyelik</a></li>
+    </ul></div>
+    <div class="footer-col"><h4></h4></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+const id = TODAP.getParam('id');
+const haber = data.haberler.find(h => h.id === id);
+
+if (haber) {
+  document.title = haber.baslik + ' — TODAP';
+  const others = data.haberler.filter(h=>h.aktif && h.id !== id).slice(0,3);
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / <a href="haberler.html">Haberler</a> / ${haber.kategori}</div>
+        <h1>${haber.baslik}</h1>
+      </div>
+    </div>
+    <main>
+      <a class="back-link" href="haberler.html">← Tüm Haberler</a>
+      <div class="detail-meta">
+        <span class="detail-cat">${haber.kategori}</span>
+        <span class="detail-date">${TODAP.formatDate(haber.tarih)}</span>
+      </div>
+      <div class="detail-body">${haber.icerik}</div>
+      <div class="share-bar">
+        <span>Paylaş:</span>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(haber.baslik)}&url=${encodeURIComponent(window.location.href)}" target="_blank">Twitter</a>
+        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank">Facebook</a>
+      </div>
+      ${others.length ? `
+      <div class="other-news">
+        <h3>Diğer Haberler</h3>
+        <div class="other-grid">
+          ${others.map(o=>`<a class="other-card" href="haber.html?id=${o.id}"><div class="other-cat">${o.kategori}</div><div class="other-title">${o.baslik}</div></a>`).join('')}
+        </div>
+      </div>` : ''}
+    </main>`;
+} else {
+  document.getElementById('page-content').innerHTML = '<div class="page-hero"><div class="page-hero-inner"><h1>Haber Bulunamadı</h1></div></div><main><a class="back-link" href="haberler.html">← Tüm Haberler</a></main>';
+}
+</script>
+</body>
+</html>

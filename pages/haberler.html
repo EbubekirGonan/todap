@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Haberler — TODAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../shared.css"/>
+<style>
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2rem}
+.filter-btn{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);border-radius:2px;background:transparent;color:var(--ink-muted);cursor:pointer;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--burgundy);color:#fff;border-color:var(--burgundy)}
+.news-list{display:flex;flex-direction:column;gap:0}
+.news-item{display:grid;grid-template-columns:80px 1fr;gap:0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit}
+.news-item:first-child{border-top:1px solid var(--border)}
+.news-item:hover .ni-body{background:var(--mustard-light)}
+.ni-date{padding:1.5rem 1rem 1.5rem 0;text-align:right;border-right:1px solid var(--border)}
+.ni-day{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--burgundy);line-height:1}
+.ni-month{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint)}
+.ni-body{padding:1.5rem 1.5rem;transition:background .2s}
+.ni-cat{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--mustard);margin-bottom:4px}
+.ni-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:0.35rem}
+.ni-ozet{font-size:14px;color:var(--ink-muted);line-height:1.5}
+
+/* DETAIL */
+.detail-meta{display:flex;gap:16px;align-items:center;margin-bottom:2rem;flex-wrap:wrap}
+.detail-cat{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;background:var(--burgundy);color:#fff;border-radius:2px}
+.detail-date{font-family:var(--font-display);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-faint)}
+.detail-title{font-family:var(--font-display);font-size:clamp(26px,4vw,44px);font-weight:800;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);margin-bottom:1.5rem}
+.detail-title em{font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400;color:var(--burgundy)}
+.detail-body{max-width:680px}
+.detail-body p{font-size:17px;line-height:1.8;color:var(--ink-muted);margin-bottom:1.25rem}
+.back-link{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--burgundy);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:2.5rem}
+.back-link::before{content:'←'}
+.back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">TOD<span>AP</span></a>
+  <ul class="nav-links">
+    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+    <li><a href="birimler.html">Birimler</a></li>
+    <li><a href="haberler.html" class="active">Haberler</a></li>
+    <li><a href="yayinlar.html">Yayınlar</a></li>
+    <li><a href="etkinlikler.html">Etkinlikler</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+  <div style="display:flex;gap:10px">
+    <a class="btn-nav-outline" href="#">EN</a>
+    <a class="btn-nav-fill" href="uyelik.html">Üye Ol</a>
+  </div>
+</nav>
+
+<div id="page-content"></div>
+
+<footer style="margin-top:4rem">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="footer-logo">TOD<span>AP</span></span><p>Toplumcu Psikologlar Derneği.</p></div>
+    <div class="footer-col"><h4>Sayfalar</h4><ul>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="birimler.html">Birimler</a></li>
+      <li><a href="haberler.html">Haberler</a></li>
+      <li><a href="yayinlar.html">Yayınlar</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Birimler</h4><ul>
+      <li><a href="birimler.html#b1">Psikolog Hakları</a></li>
+      <li><a href="birimler.html#b2">Kadın Komisyonu</a></li>
+      <li><a href="birimler.html#b3">Meslek Yasası</a></li>
+      <li><a href="birimler.html#b4">Öğrenci Komisyonu</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Bağlantı</h4><ul>
+      <li><a href="iletisim.html">İletişim</a></li>
+      <li><a href="https://twitter.com/todapder" target="_blank">@todapder</a></li>
+      <li><a href="uyelik.html">Üyelik</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 TODAP</span></div>
+</footer>
+
+<script src="../shared.js"></script>
+<script>
+const data = TODAP.getData();
+const id = TODAP.getParam('id');
+
+if (id) {
+  // DETAIL VIEW
+  const haber = data.haberler.find(h => h.id === id);
+  if (haber) {
+    document.title = haber.baslik + ' — TODAP';
+    const d = new Date(haber.tarih);
+    document.getElementById('page-content').innerHTML = `
+      <div class="page-hero">
+        <div class="page-hero-inner">
+          <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / <a href="haberler.html">Haberler</a> / ${haber.kategori}</div>
+          <h1>${haber.baslik}</h1>
+        </div>
+      </div>
+      <main>
+        <a class="back-link" href="haberler.html">Tüm Haberler</a>
+        <div class="detail-meta">
+          <span class="detail-cat">${haber.kategori}</span>
+          <span class="detail-date">${TODAP.formatDate(haber.tarih)}</span>
+        </div>
+        <div class="detail-body">${haber.icerik}</div>
+      </main>`;
+  } else {
+    document.getElementById('page-content').innerHTML = '<main><p>Haber bulunamadı.</p></main>';
+  }
+} else {
+  // LIST VIEW
+  const kategoriler = [...new Set(data.haberler.filter(h=>h.aktif).map(h=>h.kategori))];
+  let listHTML = `
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="breadcrumb"><a href="../index.html">Ana Sayfa</a> / Haberler</div>
+        <h1>Haberler & <em>Açıklamalar</em></h1>
+        <p>Bildiriler, raporlar ve mesleki açıklamalarımız.</p>
+      </div>
+    </div>
+    <main>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterNews('all',this)">Tümü</button>
+        ${kategoriler.map(k=>`<button class="filter-btn" onclick="filterNews('${k}',this)">${k}</button>`).join('')}
+      </div>
+      <div class="news-list" id="news-list">`;
+
+  data.haberler.filter(h=>h.aktif).forEach(h => {
+    const d = new Date(h.tarih);
+    const gun = d.getDate().toString().padStart(2,'0');
+    const aylar = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const ay = aylar[d.getMonth()];
+    listHTML += `
+      <a class="news-item" href="haber.html?id=${h.id}" data-kategori="${h.kategori}">
+        <div class="ni-date"><div class="ni-day">${gun}</div><div class="ni-month">${ay}</div></div>
+        <div class="ni-body"><div class="ni-cat">${h.kategori}</div><div class="ni-title">${h.baslik}</div><div class="ni-ozet">${h.ozet}</div></div>
+      </a>`;
+  });
+  listHTML += `</div></main>`;
+  document.getElementById('page-content').innerHTML = listHTML;
+}
+
+function filterNews(kat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.news-item').forEach(item => {
+    item.style.display = (kat==='all' || item.dataset.kategori===kat) ? 'grid' : 'none';
+  });
+}
+</script>
+</body>
+</html>
